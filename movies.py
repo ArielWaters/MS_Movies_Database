@@ -64,6 +64,8 @@ def search_movie(dictionary):
   for movie, rating in dictionary.items(): 
     if user_input in movie.lower(): 
       print(f"{movie}, {rating}")
+  if user_input not in movie.lower(): 
+    print("Movie not found")
 
 def sorted_movies(dictionary): 
   sorted_dictionary = sorted(dictionary, key = dictionary.get, reverse = True)

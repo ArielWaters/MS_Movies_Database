@@ -1,0 +1,26 @@
+{
+    "Dear John": {
+        "name": "Dear John",
+        "year": "2010",
+        "rating": "6.3",
+        "poster": "https://m.media-amazon.com/images/M/MV5BMTk1NDEzMTU5NV5BMl5BanBnXkFtZTcwNTI3MTk5Mg@@._V1_SX300.jpg"
+    },
+    "The Room": {
+        "name": "The Room",
+        "year": "2003",
+        "rating": "3.6",
+        "poster": "https://m.media-amazon.com/images/M/MV5BN2IwYzc4MjEtMzJlMS00MDJlLTkzNDAtN2E4NGNkZjg0MDgxXkEyXkFqcGdeQXVyMjQwMDg0Ng@@._V1_SX300.jpg"
+    },
+    "Jurassic World": {
+        "name": "Jurassic World",
+        "year": "2015",
+        "rating": "6.9",
+        "poster": "https://m.media-amazon.com/images/M/MV5BNzQ3OTY4NjAtNzM5OS00N2ZhLWJlOWUtYzYwZjNmOWRiMzcyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg"
+    },
+    "Star Wars": {
+        "name": "Star Wars: Episode IV - A New Hope",
+        "year": "1977",
+        "rating": "8.6",
+        "poster": "https://m.media-amazon.com/images/M/MV5BOTA5NjhiOTAtZWM0ZC00MWNhLThiMzEtZDFkOTk2OTU1ZDJkXkEyXkFqcGdeQXVyMTA4NDI1NTQx._V1_SX300.jpg"
+    }
+}

@@ -1,129 +1,169 @@
 import random
+import movie_storage
 
-def list_movies(dictionary):
-  print(len(dictionary), "movies in total")
-  for key, value in dictionary.items(): 
-    print(key, ":", value)
 
-def add_movie(dictionary): 
-  user_input1 = input("Enter new movie name: ")
-  user_input2 = float(input("Enter new movie rating (0-10): "))
-  dictionary[user_input1] = user_input2
-  print(f"Movie {user_input1} successfully added")
+def list_movies():
+    """Provides a list of the movies in the database"""
 
-def del_movie(dictionary): 
-  user_input = input("Enter movie name to delete: ")
-  if user_input not in dictionary: 
-    print(f"Movie {user_input} doesn't exist!")
-  elif user_input in dictionary: 
-    del dictionary[user_input]
-    print(f"Movie {user_input} successfully deleted!")
-  
-def update_movie(dictionary): 
-  user_input1 = input("Enter movie name: ")
-  if user_input1 not in dictionary: 
-    print(f"Movie {user_input1} doesn't exist!")
-  elif user_input1 in dictionary: 
-    user_input2 = float(input("Enter new movie rating(0-10): "))
-    dictionary[user_input1] = user_input2
-    print(f"Movie {user_input1} successfully updated!")
+    movies_data = movie_storage.list_movies()
+    movies = []
+    for name, movie in movies_data.items():
+        movies.append({'name': name, 'rating': movie['rating'], 'year': movie['year']})
 
-def stats(dictionary): 
-  ratings = list(dictionary.values())
-  
-  #average rating
-  avg_rating = sum(ratings) / len(ratings)
-  print(f"Average rating: {avg_rating:.2f}")
+    print(len(movies), "movies in total")
+    for index, movie in enumerate(movies):
+        print(f"{index + 1}. {movie['name']}: {movie['rating']}, {movie['year']}")
 
-  #median rating
-  n = len(ratings)
-  sorted_ratings = sorted(ratings)
-  if n % 2 == 0:
-    median_rating = (sorted_ratings[n//2 - 1] + sorted_ratings[n//2]) / 2
-  else:
-    median_rating = sorted_ratings[n//2]
-  print(f"Median rating: {median_rating:.2f}")
-  
-  #best movie
-  best_movie = [title for title, rating in dictionary.items() if rating == max(ratings)]
-  for movie in best_movie: 
-    print(f"Best movie: {movie}, {dictionary[movie]}")
-  
-  #worst movie
-  worst_movie = [title for title, rating in dictionary.items() if rating == min(ratings)]
-  for movie in worst_movie: 
-    print(f"Worst movie: {movie}, {dictionary[movie]}")
 
-def random_movie(dictionary): 
-  key, value = random.choice(list(dictionary.items()))
-  print(f"Your movie for tonight: {key}. It's rated {value}.")
+def add_movie():
+    """Adds a new movie to the list of movies in the database"""
 
-def search_movie(dictionary):
-  user_input = input("Enter part of movie name: ")
-  user_input = user_input.lower()
-  for movie, rating in dictionary.items(): 
-    if user_input in movie.lower(): 
-      print(f"{movie}, {rating}")
-  if user_input not in movie.lower(): 
-    print("Movie not found")
+    name = input("Enter new movie name: ")
 
-def sorted_movies(dictionary): 
-  sorted_dictionary = sorted(dictionary, key = dictionary.get, reverse = True)
-  for item in sorted_dictionary: 
-    print(item, dictionary[item])
+    movie_storage.add_movie(name)
+
+
+def del_movie():
+    """Deletes a selected movie from the list of movies in the database"""
+
+    name = input("Enter movie name to delete: ")
+
+    movie_storage.delete_movie(name)
+
+    print(f"Movie {name} successfully deleted!")
+
+
+def update_movie():
+    """Updates the information of a selected movie in the list of movies in the database"""
+
+    name = input("Enter movie name: ")
+    rating = input("Enter new movie rating (0-10): ")
+
+    movie_storage.update_movie(name, rating)
+
+    print(f"Movie {name} successfully updated!")
+
+
+def stats():
+    """Calculates and displays statistics for the movies in the database"""
+
+    movies_data = movie_storage.list_movies()
+    ratings = [float(movie['rating']) for movie in movies_data.values()]
+
+    # Average rating
+    avg_rating = sum(ratings) / len(ratings)
+    print(f"Average rating: {avg_rating:.2f}")
+
+    # Median rating
+    n = len(ratings)
+    sorted_ratings = sorted(ratings)
+    if n % 2 == 0:
+        median_rating = (sorted_ratings[n // 2 - 1] + sorted_ratings[n // 2]) / 2
+    else:
+        median_rating = sorted_ratings[n // 2]
+    print(f"Median rating: {median_rating:.2f}")
+
+    # Best movie
+    best_movies = [name for name, movie in movies_data.items() if movie['rating'] == max(ratings)]
+    for movie in best_movies:
+        print(f"Best movie: {movie}, {max(ratings)}")
+
+    # Worst movie
+    worst_movies = [name for name, movie in movies_data.items() if movie['rating'] == min(ratings)]
+    for movie in worst_movies:
+        print(f"Worst movie: {movie}, {min(ratings)}")
+
+
+def random_movie():
+    """Selects a random movie from the list and prints its name and rating"""
+
+    movies_data = movie_storage.list_movies()
+    movie_name = random.choice(list(movies_data.keys()))
+    movie = movies_data[movie_name]
+    print(f"Your movie for tonight: {movie_name}. It's rated {movie['rating']}.")
+
+
+def search_movie():
+    """Searches for movies based on a partial name entered by the user"""
+
+    user_input = input("Enter part of movie name: ").lower()
+    movies_data = movie_storage.list_movies()
+    found_movies = []
+    for name, movie in movies_data.items():
+        if user_input in name.lower():
+            found_movies.append(f"{name}, {movie['rating']}")
+    if found_movies:
+        print("\n".join(found_movies))
+    else:
+        print("No movies found")
+
+
+def sorted_movies():
+    """Sorts and displays the movies in descending order of their ratings"""
+
+    movies_data = movie_storage.list_movies()
+    sorted_movies_data = sorted(movies_data.items(), key=lambda x: float(x[1]['rating']), reverse=True)
+
+    for name, movie in sorted_movies_data:
+        print(f"{name}, {movie['rating']}")
 
 
 def main():
-  movies = {
-      "The Shawshank Redemption": 9.5,
-      "Pulp Fiction": 8.8,
-      "The Room": 3.6,
-      "The Godfather": 9.2,
-      "The Godfather: Part II": 9.0,
-      "The Dark Knight": 9.0,
-      "12 Angry Men": 8.9,
-      "Everything Everywhere All At Once": 8.9,
-      "Forrest Gump": 8.8,
-      "Star Wars: Episode V": 8.7
-  }
+    while True:
+        print("******** My Movies Database ********")
+        print("Menu:")
 
-  while True: 
-    print("******** My Movies Database ********")
-    print("Menu:")
+        menu_movies = {
+            "0.": "Exit",
+            "1.": "List movies",
+            "2.": "Add movie",
+            "3.": "Delete movie",
+            "4.": "Update movie",
+            "5.": "Stats",
+            "6.": "Random movie",
+            "7.": "Search movie",
+            "8.": "Movies sorted by rating",
+            "9.": "Generate website"
+        }
 
-    menu_dictionary = {
-      "1.": "List movies",
-      "2.": "Add movie",
-      "3.": "Delete movie",
-      "4.": "Update movie", 
-      "5.": "Stats",
-      "6.": "Random movie",
-      "7.": "Search movie",
-      "8.": "Movies sorted by rating"}
-  
-    for key, value in menu_dictionary.items(): 
-      print(key, value)
-  
-    user_input = int(input("Enter choice (1-8): "))
-    if user_input == 1:
-      list_movies(movies)
-    elif user_input == 2:
-      add_movie(movies)
-    elif user_input == 3:
-      del_movie(movies)
-    elif user_input == 4:
-      update_movie(movies)
-    elif user_input == 5: 
-      stats(movies)
-    elif user_input == 6:
-      random_movie(movies)
-    elif user_input == 7:
-      search_movie(movies)
-    elif user_input == 8: 
-      sorted_movies(movies)
-  
-    ending = input("Press enter to continue")
+        for key, value in menu_movies.items():
+            print(key, value)
+
+        print()
+        user_input = int(input("Enter choice (0-8): "))
+        if user_input == 0:
+            print("Bye!")
+            break
+        elif user_input == 1:
+            list_movies()
+            print()
+        elif user_input == 2:
+            add_movie()
+            print()
+        elif user_input == 3:
+            del_movie()
+            print()
+        elif user_input == 4:
+            update_movie()
+            print()
+        elif user_input == 5:
+            stats()
+            print()
+        elif user_input == 6:
+            random_movie()
+            print()
+        elif user_input == 7:
+            search_movie()
+            print()
+        elif user_input == 8:
+            sorted_movies()
+            print()
+        elif user_input == 9:
+            movie_storage.generate_website()
+            print()
+
+        ending = input("Press enter to continue")
+
 
 if __name__ == "__main__":
-  main()
-
+    main()
